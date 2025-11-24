@@ -11,9 +11,13 @@ public abstract class Rod {
         throw new IllegalArgumentException(fieldName + " não pode ser vazio ou nulo.");
     }
 
-    static void email(String email) {
+    public static void email(String email, boolean optional) {
 
-        if (email == null || email.isBlank()) {
+        if (optional && (email == null || email.isBlank())) {
+            return;
+        }
+
+        if (!optional && (email == null || email.isBlank())) {
             notNullField("E-mail");
         }
 
@@ -24,7 +28,7 @@ public abstract class Rod {
         }
     }
 
-    static void string(String value, String fieldName, boolean optional, Integer min, Integer max) {
+    public static void string(String value, String fieldName, boolean optional, Integer min, Integer max) {
 
         if (!optional) {
             if (value == null || value.isBlank()) {
@@ -47,32 +51,29 @@ public abstract class Rod {
         }
     }
 
-    static void number(Number value, String fieldName, boolean optional, Double min, Double max) {
-    if (!optional && value == null) {
-        notNullField(fieldName);
+    public static void number(Number value, String fieldName, boolean optional, Double min, Double max) {
+        if (!optional && value == null) {
+            notNullField(fieldName);
+        }
+
+        if (value == null) {
+            return;
+        }
+
+        double v = value.doubleValue();
+
+        if (min != null && v < min) {
+            throw new IllegalArgumentException(
+                    fieldName + " deve ser no mínimo " + min + ".");
+        }
+
+        if (max != null && v > max) {
+            throw new IllegalArgumentException(
+                    fieldName + " deve ser no máximo " + max + ".");
+        }
     }
 
-    if (value == null) {
-        return;
-    }
-
-    double v = value.doubleValue();
-
-    if (min != null && v < min) {
-        throw new IllegalArgumentException(
-                fieldName + " deve ser no mínimo " + min + "."
-        );
-    }
-
-    if (max != null && v > max) {
-        throw new IllegalArgumentException(
-                fieldName + " deve ser no máximo " + max + "."
-        );
-    }
-}
-
-
-    static void ValidEnum(ArrayList<String> values, String value, String fieldName) {
+    public static void ValidEnum(ArrayList<String> values, String value, String fieldName) {
         if (value == null || value.isBlank()) {
             notNullField(fieldName);
         }
@@ -91,7 +92,7 @@ public abstract class Rod {
                 fieldName + " tem uma valor que não corresponde ao enum [ " + values + " ]");
     }
 
-    static LocalDate BrasillianDate(String dateStr, Boolean optional) {
+    public static LocalDate BrasillianDate(String dateStr, Boolean optional) {
         if (!optional) {
             if (dateStr == null || dateStr.isBlank()) {
                 notNullField("Data");
@@ -108,6 +109,42 @@ public abstract class Rod {
             return LocalDate.parse(dateStr, formatter);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Data inválida. Use o formato yyyy/MM/dd.");
+        }
+    }
+
+    public static void cpf(String cpf) {
+        if (cpf == null || cpf.isBlank()) {
+            notNullField("CPF");
+        }
+
+        String limpo = cpf.replaceAll("\\D", "");
+
+        if (!limpo.matches("\\d+")) {
+            throw new IllegalArgumentException("CPF deve conter apenas números.");
+        }
+
+        if (limpo.length() != 11) {
+            throw new IllegalArgumentException("CPF deve ter exatamente 11 dígitos.");
+        }
+    }
+
+    public static void telefone(String telefone, boolean optional) {
+        if (!optional && (telefone == null || telefone.isBlank())) {
+            notNullField("Telefone");
+        }
+
+        if (telefone == null || telefone.isBlank()) {
+            return;
+        }
+
+        String limpo = telefone.replaceAll("\\D", "");
+
+        if (!limpo.matches("\\d+")) {
+            throw new IllegalArgumentException("Telefone deve conter apenas números.");
+        }
+
+        if (limpo.length() < 10 || limpo.length() > 11) {
+            throw new IllegalArgumentException("Telefone deve ter 10 ou 11 dígitos.");
         }
     }
 
