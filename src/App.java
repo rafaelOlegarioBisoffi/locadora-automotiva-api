@@ -9,8 +9,8 @@ public class App {
         // Carrega TODAS as APIs estáticas
         apiCliente.Execute();
         apiCarro.Execute();
-        // ApiEmprestimo.Execute();
-        // ApiSuspensao.Execute();
+        apiAluguel.Execute();
+        apiSuspensao.Execute();
 
         System.out.println("╔════════════════════════════════════════╗");
         System.out.println("║   🚗 LOCADORA AUTOMOTIVA API 🚗       ║");
@@ -30,6 +30,28 @@ public class App {
         System.out.println("   → GET    /carros");
         System.out.println("   → GET    /carro/:id");
         System.out.println();
+        System.out.println("📋 ALUGUÉIS:");
+        System.out.println("   → GET    /alugueis");
+        System.out.println("   → GET    /aluguel/:id");
+        System.out.println("   → GET    /alugueis/cliente/:clienteId");
+        System.out.println("   → GET    /alugueis/cliente/:clienteId?status=APROVADO");
+        System.out.println("   → POST   /aluguel");
+        System.out.println("   → PUT    /aluguel/:id/aprovar");
+        System.out.println("   → PUT    /aluguel/:id/rejeitar");
+        System.out.println("   → PUT    /aluguel/:id/devolver");
+        System.out.println("   → DELETE /aluguel/:id");
+        System.out.println();
+        System.out.println("🚫 SUSPENSÕES:");
+        System.out.println("   → GET    /suspensoes");
+        System.out.println("   → GET    /suspensao/:id");
+        System.out.println("   → GET    /suspensoes/cliente/:clienteId");
+        System.out.println("   → GET    /suspensoes/cliente/:clienteId?ativas=true");
+        System.out.println("   → GET    /suspensoes/cliente/:clienteId/status");
+        System.out.println("   → POST   /suspensao");
+        System.out.println("   → PUT    /suspensao/:id");
+        System.out.println("   → DELETE /suspensao/:id");
+        System.out.println();
+        System.out.println("✅ Servidor pronto para receber requisições!");
 
     }
 }
