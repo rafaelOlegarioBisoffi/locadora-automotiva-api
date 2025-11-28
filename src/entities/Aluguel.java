@@ -2,17 +2,16 @@ package entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Aluguel {
-    private int id;
-    private int clienteId;
-    private int carroId;
-    private LocalDateTime dataSolicitacao;
-    private LocalDateTime dataAprovacao;
-    private LocalDate dataInicio;
-    private LocalDate dataFimPrevista;
-    private LocalDateTime dataDevolucaoReal;
+    private Long id;
+    private Long clienteId;
+    private Long carroId;
+    private String dataSolicitacao;
+    private String dataAprovacao;
+    private String dataInicio;
+    private String dataFimPrevista;
+    private String dataDevolucaoReal;
     private StatusAluguel status;
     private int diasAtraso;
     private BigDecimal valorTotal;
@@ -31,78 +30,80 @@ public class Aluguel {
         this.diasAtraso = 0;
     }
     
-    public Aluguel(int clienteId, int carroId, LocalDate dataInicio) {
+    public Aluguel(Long clienteId, Long carroId, String dataInicio) {
         this.clienteId = clienteId;
         this.carroId = carroId;
         this.dataInicio = dataInicio;
-        this.dataFimPrevista = dataInicio.plusDays(5); // Limite de 5 dias
+        LocalDate dataInicioLD = LocalDate.parse(dataInicio);
+        this.dataFimPrevista = dataInicioLD.plusDays(5).toString(); // Limite de 5 dias
         this.status = StatusAluguel.PENDENTE;
         this.diasAtraso = 0;
     }
     
     // Getters e Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
     
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     
-    public int getClienteId() {
+    public Long getClienteId() {
         return clienteId;
     }
     
-    public void setClienteId(int clienteId) {
+    public void setClienteId(Long clienteId) {
         this.clienteId = clienteId;
     }
     
-    public int getCarroId() {
+    public Long getCarroId() {
         return carroId;
     }
     
-    public void setCarroId(int carroId) {
+    public void setCarroId(Long carroId) {
         this.carroId = carroId;
     }
     
-    public LocalDateTime getDataSolicitacao() {
+    public String getDataSolicitacao() {
         return dataSolicitacao;
     }
     
-    public void setDataSolicitacao(LocalDateTime dataSolicitacao) {
+    public void setDataSolicitacao(String dataSolicitacao) {
         this.dataSolicitacao = dataSolicitacao;
     }
     
-    public LocalDateTime getDataAprovacao() {
+    public String getDataAprovacao() {
         return dataAprovacao;
     }
     
-    public void setDataAprovacao(LocalDateTime dataAprovacao) {
+    public void setDataAprovacao(String dataAprovacao) {
         this.dataAprovacao = dataAprovacao;
     }
     
-    public LocalDate getDataInicio() {
+    public String getDataInicio() {
         return dataInicio;
     }
     
-    public void setDataInicio(LocalDate dataInicio) {
+    public void setDataInicio(String dataInicio) {
         this.dataInicio = dataInicio;
-        this.dataFimPrevista = dataInicio.plusDays(5);
+        LocalDate dataInicioLD = LocalDate.parse(dataInicio);
+        this.dataFimPrevista = dataInicioLD.plusDays(5).toString();
     }
     
-    public LocalDate getDataFimPrevista() {
+    public String getDataFimPrevista() {
         return dataFimPrevista;
     }
     
-    public void setDataFimPrevista(LocalDate dataFimPrevista) {
+    public void setDataFimPrevista(String dataFimPrevista) {
         this.dataFimPrevista = dataFimPrevista;
     }
     
-    public LocalDateTime getDataDevolucaoReal() {
+    public String getDataDevolucaoReal() {
         return dataDevolucaoReal;
     }
     
-    public void setDataDevolucaoReal(LocalDateTime dataDevolucaoReal) {
+    public void setDataDevolucaoReal(String dataDevolucaoReal) {
         this.dataDevolucaoReal = dataDevolucaoReal;
     }
     
@@ -138,13 +139,16 @@ public class Aluguel {
         this.motivoRejeicao = motivoRejeicao;
     }
     
-    // Métodos auxiliares
     public boolean estaAtrasado() {
-        if (dataDevolucaoReal == null && LocalDate.now().isAfter(dataFimPrevista)) {
+        LocalDate hoje = LocalDate.now();
+        LocalDate dataFim = LocalDate.parse(dataFimPrevista);
+        
+        if (dataDevolucaoReal == null && hoje.isAfter(dataFim)) {
             return true;
         }
         if (dataDevolucaoReal != null) {
-            return dataDevolucaoReal.toLocalDate().isAfter(dataFimPrevista);
+            LocalDate dataDevolucao = LocalDate.parse(dataDevolucaoReal);
+            return dataDevolucao.isAfter(dataFim);
         }
         return false;
     }

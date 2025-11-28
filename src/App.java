@@ -7,8 +7,8 @@ public class App {
         port(8080);
 
         // Carrega TODAS as APIs estáticas
-        ApiCliente.Execute();
-        ApiCarro.Execute();
+        apiCliente.Execute();
+        apiCarro.Execute();
         // ApiEmprestimo.Execute();
         // ApiSuspensao.Execute();
 

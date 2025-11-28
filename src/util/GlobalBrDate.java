@@ -1,6 +1,7 @@
 package util;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -12,6 +13,13 @@ public abstract class GlobalBrDate {
         LocalDateTime localDateTime = timestamp.toLocalDateTime();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         return localDateTime.format(formatter);
+    }
+
+    public static String formatLocalDate(LocalDate localDate) {
+        if (localDate == null) return null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return localDate.format(formatter);
     }
 
     public static Timestamp now() {

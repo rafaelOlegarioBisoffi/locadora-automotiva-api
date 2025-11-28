@@ -12,7 +12,7 @@ import spark.Response;
 import spark.Route;
 import spark.Filter;
 
-public class ApiCliente {
+public class apiCliente {
 
   private static final daoCliente dao = new daoCliente();
   private static final Gson gson = new Gson();
