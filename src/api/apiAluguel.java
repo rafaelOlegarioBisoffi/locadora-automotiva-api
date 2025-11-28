@@ -195,21 +195,32 @@ public class apiAluguel {
 
                     if (aluguel.getStatus() != StatusAluguel.PENDENTE) {
                         response.status(400);
-                        return "{\"mensagem\":\"Apenas alugueis aguardando aprovação podem ser aprovados\"}";
+                        return "{\"mensagem\":\"Apenas alugueis pendentes podem ser aprovados\"}";
                     }
 
-                    // Verificar se passou mais de 24 horas da solicitação
+                    // Validar se a aprovação está dentro de 24h da criação
                     LocalDate dataSolicitacao = LocalDate.parse(aluguel.getDataSolicitacao());
                     LocalDate hoje = LocalDate.now();
-                    long horasPassadas = ChronoUnit.HOURS.between(dataSolicitacao.atStartOfDay(), hoje.atStartOfDay());
+                    long horasDecorridas = ChronoUnit.HOURS.between(
+                        dataSolicitacao.atStartOfDay(),
+                        hoje.atStartOfDay()
+                    );
 
-                    if (horasPassadas > 24) {
+                    if (horasDecorridas > 24) {
                         response.status(400);
-                        return "{\"mensagem\":\"Prazo de 24 horas para aprovação expirado\"}";
+                        return "{\"mensagem\":\"A aprovação deve ser feita em até 24 horas após a criação do aluguel. Prazo expirado.\"}";
                     }
 
                     // Obter data de início do corpo da requisição
-                    String dataInicio = gson.fromJson(request.body(), java.util.Map.class).get("dataInicio").toString();
+                    String dataInicio = null;
+                    try {
+                        java.util.Map<String, Object> body = gson.fromJson(request.body(), java.util.Map.class);
+                        if (body != null && body.get("dataInicio") != null) {
+                            dataInicio = body.get("dataInicio").toString();
+                        }
+                    } catch (Exception e) {
+                        // Se não conseguir fazer parse, usar data de hoje
+                    }
                     
                     if (dataInicio == null || dataInicio.isEmpty()) {
                         dataInicio = LocalDate.now().toString();
